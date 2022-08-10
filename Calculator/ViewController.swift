@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var operatorLabel: UILabel!
     @IBOutlet weak var tempLabel: UILabel!
  
-    var large: Double = 0.0
+    var result: Double = 0.0
     var temp: Double = 0.0
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,21 +78,21 @@ class ViewController: UIViewController {
         getTempText()
         switch op {
         case "+":
-            temp += large
+            temp += result
             break
         case "-":
-            temp -= large
+            temp -= result
             break
         case "*":
-            temp *= large
+            temp *= result
             break
         case "/":
-            if large == 0 {
+            if result == 0 {
                 setLargeLabelWithMessage(message: "Numbers can not divide zero")
                 return
             }
             else {
-                temp /= large
+                temp /= result
             }
             break
         default:
@@ -102,7 +102,7 @@ class ViewController: UIViewController {
         
         tempLabel.text = ""
         operatorLabel.text = ""
-        large = 0
+        result = 0
         setLargeLabelWithResult(temp)
         temp = 0
     }
@@ -114,7 +114,7 @@ class ViewController: UIViewController {
         getTempText()
         getLargeText()
         
-        temp += large
+        temp += result
         
         setOperatorLabel(opeartor: "+")
         setTempLabelWithResult(temp)
@@ -128,7 +128,7 @@ class ViewController: UIViewController {
         getTempText()
         getLargeText()
         
-        temp -= large
+        temp -= result
         
         setOperatorLabel(opeartor: "-")
         setTempLabelWithResult(temp)
@@ -142,7 +142,7 @@ class ViewController: UIViewController {
         getTempText()
         getLargeText()
         
-        temp *= large
+        temp *= result
         
         setOperatorLabel(opeartor: "*")
         setTempLabelWithResult(temp)
@@ -155,12 +155,12 @@ class ViewController: UIViewController {
         }
         getTempText()
         getLargeText()
-        guard large != 0 else {
+        guard result != 0 else {
             setLargeLabelWithMessage(message: "Numbers can not divide zero")
             return
         }
     
-        temp /= large
+        temp /= result
         setOperatorLabel(opeartor: "/")
         setTempLabelWithResult(temp)
         setLargeLabelWithResult(0.0)
@@ -169,8 +169,12 @@ class ViewController: UIViewController {
     @IBAction func factorielButton(_ sender: Any) {
        
         guard let number = Float(largeLabel.text!) else {
-            setLargeLabelWithMessage(message: "Please enter integer number")
+            
            return
+        }
+        guard number.truncatingRemainder(dividingBy: 1.0) == 0 else{
+            setLargeLabelWithMessage(message: "Please enter integer number")
+            return
         }
         
         guard number < 14 else {
@@ -197,6 +201,7 @@ class ViewController: UIViewController {
     
     @IBAction func deleteButton(_ sender: Any) {
         var text = largeLabel.text
+        guard text != "" else  { return }
         text?.removeLast()
         largeLabel.text = text
         
@@ -207,7 +212,8 @@ class ViewController: UIViewController {
         tempLabel.text = ""
         operatorLabel.text = ""
         temp = 0
-        large = 0
+        result = 0
+        largeLabel.font = UIFont.systemFont(ofSize: 60)
     }
     //MARK: - Setter functions
     func setLargeLabelWithResult(_ result: Double){
@@ -247,17 +253,18 @@ class ViewController: UIViewController {
     func setLargeLabelWithMessage(message: String){
         tempLabel.text = ""
         operatorLabel.text = ""
-        large = 0
+        result = 0
         temp = 0
         largeLabel.font = UIFont.systemFont(ofSize: 25)
         largeLabel.text = message
     }
+    
     //MARK: - getter Functions
     func getLargeText(){
         guard let large = Double(largeLabel.text!) else  {
             return
         }
-        self.large = large
+        self.result = large
     }
     
     func getTempText(){
@@ -270,11 +277,12 @@ class ViewController: UIViewController {
     func getOperator() -> String {
         return operatorLabel.text!
     }
+    
     func firstProcess(Operator: String)-> Bool{
         if tempLabel.text == "" {
             getLargeText()
             setOperatorLabel(opeartor: Operator)
-            setTempLabelWithResult(large)
+            setTempLabelWithResult(result)
             setLargeLabelWithResult(0.0)
             return true
         }
@@ -282,6 +290,5 @@ class ViewController: UIViewController {
             return false
         }
     }
-    
 }
 
